@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ReCaLL: Membership Inference via Relative Conditional Log-Likelihoods</title>
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Google Sans', sans-serif; }
+        .hero-body { padding: 1rem 1.5rem; }
+        .publication-title { font-family: 'Google Sans', sans-serif; }
+        .publication-authors { font-family: 'Google Sans', sans-serif; font-size: 1.4em; line-height: 1.8; }
+        .publication-school { font-family: 'Google Sans', sans-serif; font-size: 1.6em; margin-top: 0.5em; }
+        .subtitle a { color: #4a4a4a; }
+        .content { font-family: 'Google Sans', sans-serif; font-size: 1.2em; }
+        .section { padding: 3rem 1.5rem; }
+        .emoji { font-size: 1em; vertical-align: middle; }
+        .highlight { background-color: #fff3cd; padding: 0 3px; }
+        .math { font-family: 'Castoro', serif; font-style: italic; }
+        .publication-links { font-size: 1em; margin-top: 0em; }
+        .publication-links .button { font-size: 1.1em; }
+        .call-to-action { background-color: #f5f5f5; padding: 1em; border-radius: 5px; margin-top: 2em; }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <div class="columns is-centered">
+                    <div class="column has-text-centered">
+                        <br>
+                        <h1 class="title is-1 publication-title">
+                            ReCaLL: Membership Inference via Relative Conditional Log-Likelihoods <span class="emoji">🔍</span>
+                        </h1>
+                        <div class="publication-authors">
+                            <a href="http://royxie.com">Roy Xie</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="https://isthatyou.github.io/">Junlin Wang</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="https://fockee.github.io/">Ruomin Huang</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="https://scholar.google.com/citations?user=1dUxfIcAAAAJ&hl=en">Minxing Zhang</a><br>
+                            <a href="https://scholar.google.com/citations?user=MVxcjEoAAAAJ&hl=en">Rong Ge</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="https://scholar.google.com/citations?user=zIMEVKsAAAAJ&hl=en">Jian Pei</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="https://scholar.google.com/citations?user=t6uCsYoAAAAJ&hl=en">Neil Zhenqiang Gong</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="https://scholar.google.com/citations?user=SLISZFAAAAAJ&hl=en">Bhuwan Dhingra</a>
+                        </div>
+                        <div class="publication-school">
+                            Duke University
+                        </div>
+                        <br>
+                        <div class="column has-text-centered">
+                            <div class="publication-links">
+                                <span class="link-block">
+                                    <a href="https://arxiv.org/abs/2404.02936" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="fas fa-file-pdf"></i>
+                                        </span>
+                                        <span>Paper</span>
+                                    </a>
+                                </span>
+                                <span class="link-block">
+                                    <a href="https://github.com/your-repo-link" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="fab fa-github"></i>
+                                        </span>
+                                        <span>Code</span>
+                                    </a>
+                                </span>
+                                <span class="link-block">
+                                    <a href="https://twitter.com/your-twitter-handle" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="fab fa-twitter"></i>
+                                        </span>
+                                        <span>Twitter</span>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="content">
+                <h2 class="title is-3">Overview <span class="emoji">🗒️</span></h2>
+                <p>
+                    ReCaLL is a novel <span class="highlight">membership inference attack (MIA)</span>  method designed to detect pretraining data in large language models (LLMs). It leverages the <span class="highlight">conditional language modeling capabilities</span> of LLMs to identify whether a given piece of text was part of the model's training data.
+                </p>
+                <div style="position: relative;">
+                    <img src="./static/images/llama.png" alt="ReCaLL concept illustration" class="image is-fullwidth">
+                    <div style="position: absolute; bottom: 5px; right: 5px; background-color: rgba(255, 255, 255, 0.7); padding: 2px 5px; font-size: 0.5em; border-radius: 3px;">
+                        Image generated by DALL-E
+                    </div>
+</div>            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="content">
+                <h2 class="title is-3">Key Idea <span class="emoji">💡</span></h2>
+                <p>
+                    The key idea behind ReCaLL is measuring the behavior of LLM when conditioning the target data point with a non-member context (prefix). The ReCaLL score, which is the ratio of the conditional log-Likelihood (LL) to the unconditional LL, is used to quantify this change.
+                </p>
+                <p>
+                    As shown in the figure below, the log-likelihood decrease is more pronounced for member data (M) compared to non-member data (NM) when conditioned on non-member context.
+                </p>
+
+                <figure class="image">
+                    <img src="./static/images/fig_1.png" alt="Log-Likelihood comparison between members and non-members" style="width: 60%;">
+                    <figcaption>LL comparison between members (M) and non-members (NM). Members experience a higher LL reduction than non-members when conditioned with non-member context.</figcaption>
+                </figure>
+                <p>
+                  One interpretation comes from <a href="https://arxiv.org/pdf/2211.15661" > prior work </a> on in-context learning, which suggests that it has an effect similar to fine-tuning. By filling the context with non-members, we are essentially changing the predictive distribution of the language model. This change has a larger detrimental effect on members, which are already memorized by the model, compared to non-members, which the model is unfamiliar with regardless of the context.
+                </p>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="content">
+                <h2 class="title is-3">How ReCaLL Works<span class="emoji">❓</span></h2>
+                <p>
+                    ReCaLL operates by comparing the unconditional and conditional log-likelihoods of target data points:
+                </p>
+                <ol>
+                    <li>Select a non-member prefix <span class="math">P</span></li>
+                    <li>Compute the unconditional log-likelihood <span class="math">LL(x)</span> for a target data point <span class="math">x</span></li>
+                    <li>Calculate the conditional log-likelihood <span class="math">LL(x|P)</span> of <span class="math">x</span> given the prefix <span class="math">P</span></li>
+                    <li>Determine the ReCaLL score as the ratio <span class="math">LL(x|P) / LL(x)</span></li>
+                </ol>
+                <p>
+                    A higher ReCaLL score <span class="emoji">📈</span> indicates more likely that the target data point being a member of the training set.
+                </p>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="content">
+                <h2 class="title is-3">Main Results <span class="emoji">🔝</span></h2>
+                <h3>Performance on WikiMIA <span class="emoji">🥇</span></h2> </h3>
+                <p>
+                    ReCaLL achieves state-of-the-art performance on the WikiMIA benchmark, consistently outperforming existing methods across different settings. On average, ReCaLL surpasses the runner-up method by 14.8%, 15.4%, and 14.8% in terms of AUC scores for input lengths of 32, 64, and 128, respectively.
+                </p>
+                <div class="has-text-centered">
+                <figure class="image">
+                    <img src="./static/images/wikimia.png" style="width: 90%;", alt="WikiMIA benchmark results">
+                </figure>
+                </div>
+
+                <h3>Performance on MIMIR <span class="emoji">🚀</span></h2> </h3>
+                <p>
+                    On the more challenging MIMIR benchmark, ReCaLL demonstrates competitive performance. In the 13-gram setting, ReCaLL outperforms all baselines on average for 160M and 1.4B models. For the 7-gram setting, ReCaLL achieves the highest AUC on 1.4B, 2.8B, 6.9B, and 12B models.
+                </p>
+                <div class="has-text-centered">
+                <figure class="image">
+                    <img src="./static/images/mimir.png" style="width: 100%;", alt="MIMIR benchmark results">
+                    <figcaption> MIMIR benchmark 13-gram setting results. ReCaLL outperforms all baselines on average for 160M and 1.4B models. Check out the 7-gram results  <a href="https://arxiv.org/abs/2404.02936" > here.</a> </figcaption>
+                </figure>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+     <section class="section">
+        <div class="container is-max-desktop">
+            <div class="content">
+                <h2 class="title is-3">More Experiments<span class="emoji"> 📋 </span></h2>
+                <h3>Effectiveness with Different Prefixes</h3>
+                <li>
+                    Our experiments show that ReCaLL is robust to random prefix selection and remains effective with synthetic prefixes generated by language models.
+                </li>
+
+                <h3>Ensemble Approach</h3>
+                <li>
+                    We developed an ensemble method that further enhances ReCaLL's performance, particularly when dealing with longer texts that exceed the model's context window.
+                </li>
+
+                <h3>Token-level Analysis</h3>
+                <li>
+                    Our in-depth analysis reveals valuable insights into how LLMs leverage membership information for effective inference at both sequence and token levels. We observed that the largest changes in log-likelihood occur in the beginning tokens, especially the first few.
+                </li>
+
+                <h3>Why Non-member Prefixes?</h3>
+                <li>
+                    Using member prefixes not only presents an unrealistic assumption but also fails to yield the desired effect for detecting pretraining data. Our experiments demonstrate that LLMs show a stronger preference to continue with text from the same membership status.
+                </li>
+                <div class="call-to-action">
+                    <p> <b> Want to dive deeper into ReCaLL and see more detailed results? <a href="https://arxiv.org/abs/2404.02936" > Check out our full paper!</a></b></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section" id="BibTeX">
+        <div class="container is-max-desktop content">
+            <h2 class="title is-3"><span class="emoji">🌟 </span>BibTeX <span class="emoji">🌟 </span></h2>
+            <pre><code>@article{xie2024recall,
+    title={ReCaLL: Membership Inference via Relative Conditional Log-Likelihoods},
+    author={Xie, Roy and Wang, Junlin and Huang, Ruomin and Zhang, Minxing and Ge, Rong and Pei, Jian and Gong, Neil Zhenqiang and Dhingra, Bhuwan},
+    journal={arXiv preprint arXiv:1234},
+    year={2024}
+}</code></pre>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="content has-text-centered">
+                <p>
+                    This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+                </p>
+                <p>
+                    This means you are free to borrow the <a href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+                    we just ask that you link back to this page in the footer.
+                    Please remember to remove the analytics code included in the header of the website which
+                    you do not want on your website.
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
